@@ -3,20 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="llms" href="https://yourusername.github.io/static-site/llms.txt" type="text/plain">
-    <meta name="llms-txt" content="https://yourusername.github.io/static-site/llms.txt">
+    <link rel="llms" href="https://renjiexedge.github.io/static-site/llms.txt" type="text/plain">
+    <meta name="llms-txt" content="https://renjiexedge.github.io/static-site/llms.txt">
     <title>Static Site</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Welcome to My Static Site</h1>
+        <h1></h1>
     </header>
     <main>
-        <p>This is a simple static site built with HTML, CSS, and JavaScript.</p>
+        <section class="form-container">
+            <form>
+                <div class="form-row">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                </div>
+                <div class="form-row">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
     </main>
     <footer>
-        <p>&copy; 2023 My Static Site</p>
+        <p>&copy; My Site</p>
     </footer>
     <script src="script.js"></script>
 </body>
