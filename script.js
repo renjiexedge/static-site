@@ -7,8 +7,5 @@ const supabaseUrl = 'https://loqujxhskaiqlwurcrdl.supabase.co';
 const supabaseKey = 'sb_publishable_PvUfGDzNIwSwF21GeRVhPw_FxAxy2fC';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener('DOMContentLoaded', function() {
-    const greetingElement = document.createElement('h1');
-    greetingElement.textContent = supabase;
-    document.body.appendChild(greetingElement);
-});
+console.log('Supabase client initialized:', supabase);
+
