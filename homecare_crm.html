@@ -1,0 +1,2209 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Homecare One CRM</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        color: #111;
+        background: #f7f7f5;
+      }
+      .app {
+        display: flex;
+        height: 100vh;
+      }
+      .side {
+        width: 175px;
+        background: #fff;
+        border-right: 1px solid #e0e0da;
+        flex-shrink: 0;
+        padding: 10px 0;
+      }
+      .logo {
+        padding: 6px 14px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #555;
+        border-bottom: 1px solid #e0e0da;
+        margin-bottom: 6px;
+        letter-spacing: 0.05em;
+      }
+      .nav {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 9px 14px;
+        font-size: 13px;
+        color: #666;
+        background: none;
+        border: none;
+        border-right: 3px solid transparent;
+        cursor: pointer;
+      }
+      .nav:hover,
+      .nav.on {
+        background: #f0faf6;
+        color: #0a5c40;
+        font-weight: 600;
+        border-right-color: #1d9e75;
+      }
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: #f7f7f5;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        background: #fff;
+        border-bottom: 1px solid #e0e0da;
+      }
+      .ttitle {
+        font-size: 14px;
+        font-weight: 700;
+        min-width: 150px;
+      }
+      .aibar {
+        flex: 1;
+        display: flex;
+        gap: 6px;
+        max-width: 420px;
+      }
+      .aibar input {
+        flex: 1;
+        padding: 6px 10px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .aibtn {
+        padding: 6px 12px;
+        font-size: 12px;
+        background: #1d9e75;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .aimsg {
+        font-size: 12px;
+        color: #0a5c40;
+        background: #e8f8f2;
+        border: 1px solid #9fe1cb;
+        border-radius: 5px;
+        padding: 7px 12px;
+        margin: 6px 16px 0;
+        display: none;
+      }
+      .body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+      }
+      .pg {
+        display: none;
+      }
+      .pg.on {
+        display: block;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .ptitle {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .btn {
+        padding: 5px 11px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #fff;
+        cursor: pointer;
+        color: #333;
+      }
+      .btnp {
+        background: #1d9e75;
+        color: #fff;
+        border-color: #1d9e75;
+        font-weight: 600;
+      }
+      .btnd {
+        background: #fff0f0;
+        color: #b00;
+        border-color: #f5caca;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        padding: 8px 12px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        background: #fafafa;
+        border-bottom: 1px solid #e0e0da;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f0ec;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: #fafff9;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .sc {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 7px;
+        padding: 10px 12px;
+      }
+      .sl {
+        font-size: 10px;
+        color: #888;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 3px;
+      }
+      .sv {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .sv-sub {
+        font-size: 11px;
+        color: #888;
+        margin-top: 2px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .bg {
+        background: #e8f8f2;
+        color: #0a5c40;
+      }
+      .bb {
+        background: #e6f1fb;
+        color: #1a5fa0;
+      }
+      .ba {
+        background: #faeeda;
+        color: #7a4e0a;
+      }
+      .bc {
+        background: #faece7;
+        color: #8c2e10;
+      }
+      .bgr {
+        background: #eaf3de;
+        color: #2d5c10;
+      }
+      .bgy {
+        background: #f0eeea;
+        color: #555;
+      }
+      .bp {
+        background: #eeedfe;
+        color: #433ab7;
+      }
+      .acc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+      .acc-card {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 8px;
+        padding: 14px;
+        cursor: pointer;
+      }
+      .acc-card:hover {
+        border-color: #1d9e75;
+      }
+      .an {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .ams {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+        align-items: center;
+      }
+      .mst {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .ms {
+        background: #f5f5f0;
+        border-radius: 5px;
+        padding: 5px 8px;
+        text-align: center;
+        min-width: 54px;
+      }
+      .msv {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .msl {
+        font-size: 10px;
+        color: #888;
+      }
+      .back {
+        font-size: 13px;
+        color: #1a5fa0;
+        cursor: pointer;
+        margin-bottom: 12px;
+        display: inline-block;
+      }
+      .a3hdr {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+      .a3name {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .a3stats {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .a3s {
+        background: #f5f5f0;
+        border-radius: 6px;
+        padding: 7px 12px;
+        text-align: center;
+      }
+      .a3sv {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .a3sl {
+        font-size: 10px;
+        color: #888;
+        text-transform: uppercase;
+      }
+      .a3body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .a3sec {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .a3full {
+        grid-column: 1/-1;
+      }
+      .a3sh {
+        padding: 8px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        background: #fafafa;
+        border-bottom: 1px solid #e0e0da;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .aitem {
+        padding: 9px 12px;
+        border-bottom: 1px solid #f0f0ec;
+        font-size: 12px;
+      }
+      .aitem:last-child {
+        border-bottom: none;
+      }
+      .arow {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .abody {
+        flex: 1;
+        min-width: 0;
+      }
+      .ahdr {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 2px;
+      }
+      .anote {
+        font-size: 11px;
+        color: #666;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .adate {
+        font-size: 10px;
+        color: #999;
+      }
+      .od {
+        color: #c00;
+        font-weight: 700;
+      }
+      .pipe-wrap {
+        overflow-x: auto;
+      }
+      .pipe {
+        display: flex;
+        gap: 7px;
+        min-width: 1100px;
+        padding-bottom: 6px;
+      }
+      .pcol {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: 7px;
+        padding: 8px;
+        width: 130px;
+        flex-shrink: 0;
+      }
+      .pct {
+        font-size: 10px;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        margin-bottom: 7px;
+        min-height: 26px;
+        line-height: 1.3;
+      }
+      .pcard {
+        background: #f5f5f0;
+        border: 1px solid #e0e0da;
+        border-radius: 5px;
+        padding: 6px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        font-size: 11px;
+      }
+      .pcard:hover {
+        border-color: #1d9e75;
+      }
+      .pctitle {
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 1px;
+      }
+      .pcacc {
+        color: #888;
+        font-size: 10px;
+      }
+      .empty {
+        padding: 24px;
+        text-align: center;
+        color: #aaa;
+        font-size: 12px;
+      }
+      .modal-bg {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-bg.on {
+        display: flex;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        width: 500px;
+        max-width: 94vw;
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid #e0e0da;
+      }
+      .modal h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      .fg {
+        margin-bottom: 11px;
+      }
+      .fg label {
+        display: block;
+        font-size: 11px;
+        color: #666;
+        font-weight: 700;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .fg input,
+      .fg select,
+      .fg textarea {
+        width: 100%;
+        padding: 7px 9px;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #fff;
+        color: #111;
+        font-family: inherit;
+      }
+      .fg textarea {
+        height: 65px;
+        resize: vertical;
+      }
+      .frow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .mact {
+        display: flex;
+        gap: 7px;
+        justify-content: flex-end;
+        margin-top: 14px;
+        border-top: 1px solid #eee;
+        padding-top: 14px;
+      }
+      .pos-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+      .pos-table th {
+        padding: 5px 8px;
+        background: #f5f5f0;
+        border: 1px solid #e0e0da;
+        font-size: 11px;
+        font-weight: 700;
+        color: #555;
+        text-align: center;
+      }
+      .pos-table td {
+        padding: 4px 6px;
+        border: 1px solid #e8e8e4;
+        text-align: center;
+      }
+      .pos-table input {
+        width: 52px;
+        padding: 4px 6px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+      }
+      .prog-bar {
+        height: 6px;
+        background: #e8e8e4;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 3px;
+      }
+      .prog-fill {
+        height: 100%;
+        background: #1d9e75;
+        border-radius: 3px;
+      }
+      .prog-fill-part {
+        background: #f0a500;
+      }
+      .rpt-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .eq-banner {
+        background: #f0faf6;
+        border: 1px solid #9fe1cb;
+        border-radius: 7px;
+        padding: 10px 16px;
+        font-size: 12px;
+        color: #0a5c40;
+        margin-bottom: 12px;
+        font-weight: 600;
+        text-align: center;
+      }
+      .sect-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 6px;
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="side">
+        <div class="logo">HOMECARE ONE</div>
+        <button class="nav on" onclick="go('dashboard')">Dashboard</button>
+        <button class="nav" onclick="go('accounts')">Accounts</button>
+        <button class="nav" onclick="go('contacts')">Contacts</button>
+        <button class="nav" onclick="go('opportunities')">Opportunities</button>
+        <button class="nav" onclick="go('pipeline')">Pipeline</button>
+        <button class="nav" onclick="go('activities')">Activities</button>
+        <button class="nav" onclick="go('submissions')">Submissions</button>
+        <button class="nav" onclick="go('reports')">Reports</button>
+      </div>
+      <div class="main">
+        <div class="topbar">
+          <div class="ttitle" id="ttl">Dashboard</div>
+          <div class="aibar">
+            <input
+              id="aiin"
+              type="text"
+              placeholder='e.g. "Log a call with Bright Hill NH"'
+              onkeydown="if (event.key === 'Enter') doAI();"
+            />
+            <button class="aibtn" onclick="doAI()">Ask AI ↗</button>
+          </div>
+        </div>
+        <div class="aimsg" id="aimsg"></div>
+        <div class="body">
+          <div class="pg on" id="pg-dashboard">
+            <div class="sect-label">Job Orders</div>
+            <div class="stats" id="dstats-jobs"></div>
+            <div class="sect-label">
+              Headcount — confirmed orders only (Active Vacancy onwards)
+            </div>
+            <div class="stats" id="dstats-hc"></div>
+            <div class="eq-banner" id="hc-equation"></div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px"
+            >
+              <div>
+                <div class="row">
+                  <span class="ptitle">Recent activities</span>
+                </div>
+                <div class="card" id="dacts"></div>
+              </div>
+              <div>
+                <div class="row">
+                  <span class="ptitle">Overdue follow-ups</span>
+                </div>
+                <div class="card" id="dod"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pg" id="pg-accounts">
+            <div id="acclist">
+              <div class="row">
+                <span class="ptitle">Accounts</span
+                ><button class="btn btnp" onclick="openM('account')">
+                  + Add account
+                </button>
+              </div>
+              <div class="acc-grid" id="accgrid"></div>
+            </div>
+            <div id="acc360" style="display: none">
+              <span class="back" onclick="backToList()"
+                >← Back to accounts</span
+              >
+              <div id="a360c"></div>
+            </div>
+          </div>
+          <div class="pg" id="pg-contacts">
+            <div class="row">
+              <span class="ptitle">Contacts</span
+              ><button class="btn btnp" onclick="openM('contact')">
+                + Add contact
+              </button>
+            </div>
+            <div class="card">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 22%">Name</th>
+                    <th style="width: 20%">Role</th>
+                    <th style="width: 26%">Account</th>
+                    <th style="width: 15%">Phone</th>
+                    <th style="width: 17%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ctb"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pg" id="pg-opportunities">
+            <div class="row">
+              <span class="ptitle">Opportunities / Job Orders</span
+              ><button class="btn btnp" onclick="openM('opportunity')">
+                + Add
+              </button>
+            </div>
+            <div class="card">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 22%">Title</th>
+                    <th style="width: 18%">Account</th>
+                    <th style="width: 14%">Stage</th>
+                    <th style="width: 9%">Requested</th>
+                    <th style="width: 9%">Filled</th>
+                    <th style="width: 14%">Progress</th>
+                    <th style="width: 14%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="otb"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pg" id="pg-pipeline">
+            <div class="row"><span class="ptitle">Pipeline board</span></div>
+            <div class="pipe-wrap"><div class="pipe" id="pipeboard"></div></div>
+          </div>
+          <div class="pg" id="pg-activities">
+            <div class="row">
+              <span class="ptitle">Activities</span
+              ><button class="btn btnp" onclick="openM('activity')">
+                + Log activity
+              </button>
+            </div>
+            <div class="card">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 12%">Type</th>
+                    <th style="width: 20%">Account</th>
+                    <th style="width: 30%">Notes</th>
+                    <th style="width: 11%">Date</th>
+                    <th style="width: 13%">Follow-up</th>
+                    <th style="width: 14%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="atb"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pg" id="pg-submissions">
+            <div class="row">
+              <span class="ptitle">Submissions</span
+              ><button class="btn btnp" onclick="openM('submission')">
+                + Add
+              </button>
+            </div>
+            <div class="card">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 20%">Candidate</th>
+                    <th style="width: 22%">Account</th>
+                    <th style="width: 12%">Role</th>
+                    <th style="width: 16%">Status</th>
+                    <th style="width: 30%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="stb"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pg" id="pg-reports">
+            <div class="row"><span class="ptitle">Reports</span></div>
+            <div class="stats" id="rstats"></div>
+            <div class="rpt-grid">
+              <div>
+                <div
+                  style="font-size: 12px; font-weight: 700; margin-bottom: 6px"
+                >
+                  Headcount by position type
+                </div>
+                <div class="card">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Position</th>
+                        <th>Requested</th>
+                        <th>Filled</th>
+                        <th>Outstanding</th>
+                      </tr>
+                    </thead>
+                    <tbody id="rpos"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <div
+                  style="font-size: 12px; font-weight: 700; margin-bottom: 6px"
+                >
+                  Outstanding follow-up activities
+                </div>
+                <div class="card" id="rfu"></div>
+              </div>
+              <div>
+                <div
+                  style="font-size: 12px; font-weight: 700; margin-bottom: 6px"
+                >
+                  Job orders with partial fills
+                </div>
+                <div class="card">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Job order</th>
+                        <th>Req</th>
+                        <th>Filled</th>
+                        <th>Gap</th>
+                      </tr>
+                    </thead>
+                    <tbody id="rpartial"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <div
+                  style="font-size: 12px; font-weight: 700; margin-bottom: 6px"
+                >
+                  Pipeline by stage
+                </div>
+                <div class="card">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Stage</th>
+                        <th>Job orders</th>
+                      </tr>
+                    </thead>
+                    <tbody id="rstg"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal-bg"
+      id="mbg"
+      onclick="if (event.target === this) closeM();"
+    >
+      <div class="modal" id="mbox"></div>
+    </div>
+    <script>
+      var STAGES = [
+        "Prospect",
+        "Contacted",
+        "Meeting Done",
+        "Terms Sent",
+        "Active Vacancy",
+        "CVs Submitted",
+        "Interview",
+        "Offer",
+        "Placement",
+        "After-sales Follow-up",
+      ];
+      var ACTIVE_STAGES = [
+        "Active Vacancy",
+        "CVs Submitted",
+        "Interview",
+        "Offer",
+        "Placement",
+        "After-sales Follow-up",
+      ];
+      var ATYPES = ["Call", "WhatsApp", "Email", "Meeting", "Follow-up"];
+      var SS = [
+        "Submitted",
+        "Interview Scheduled",
+        "Interviewed",
+        "Offered",
+        "Accepted",
+        "Rejected",
+      ];
+      var ROLES = [
+        "HR Executive",
+        "HR Manager",
+        "HR Director",
+        "Nursing Director",
+        "Operations Manager",
+        "Finance Contact",
+        "Other",
+      ];
+      var ACCT = [
+        "Hospital",
+        "Nursing Home",
+        "Clinic",
+        "Agency",
+        "Healthcare Group",
+      ];
+      var POS = ["HCA", "NA", "EN", "SN", "Others"];
+      var PG = {
+        dashboard: "Dashboard",
+        accounts: "Accounts",
+        contacts: "Contacts",
+        opportunities: "Opportunities",
+        pipeline: "Pipeline",
+        activities: "Activities",
+        submissions: "Submissions",
+        reports: "Reports",
+      };
+
+      function uid() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+      }
+      function tod() {
+        return new Date().toISOString().slice(0, 10);
+      }
+      function isActive(o) {
+        return ACTIVE_STAGES.indexOf(o.stage) >= 0;
+      }
+      function reqTotal(o) {
+        return (
+          (o.hca || 0) +
+          (o.na || 0) +
+          (o.en || 0) +
+          (o.sn || 0) +
+          (o.others || 0)
+        );
+      }
+      function filTotal(o) {
+        return (
+          (o.hca_f || 0) +
+          (o.na_f || 0) +
+          (o.en_f || 0) +
+          (o.sn_f || 0) +
+          (o.others_f || 0)
+        );
+      }
+
+      // ============================================================
+      // DATA — replace localStorage with Supabase calls here
+      // ============================================================
+      var D = {
+        accounts: [],
+        contacts: [],
+        opportunities: [],
+        activities: [],
+        submissions: [],
+      };
+      try {
+        var sv = localStorage.getItem("crm_hco");
+        if (sv) D = JSON.parse(sv);
+      } catch (e) {}
+      function save() {
+        try {
+          localStorage.setItem("crm_hco", JSON.stringify(D));
+        } catch (e) {}
+      }
+
+      function an(id) {
+        var a = D.accounts.find(function (x) {
+          return x.id === id;
+        });
+        return a ? a.name : "—";
+      }
+      function badge(txt, cls) {
+        return '<span class="badge ' + cls + '">' + txt + "</span>";
+      }
+      function stb(s) {
+        var m = {
+          Prospect: "bgy",
+          Contacted: "bb",
+          "Meeting Done": "bp",
+          "Terms Sent": "ba",
+          "Active Vacancy": "bg",
+          "CVs Submitted": "bg",
+          Interview: "bc",
+          Offer: "ba",
+          Placement: "bgr",
+          "After-sales Follow-up": "bb",
+        };
+        return badge(s, m[s] || "bgy");
+      }
+      function tpb(t) {
+        return badge(
+          t,
+          {
+            Call: "bb",
+            WhatsApp: "bg",
+            Email: "bp",
+            Meeting: "bg",
+            "Follow-up": "ba",
+          }[t] || "bgy",
+        );
+      }
+      function subb(s) {
+        return badge(
+          s,
+          {
+            Submitted: "bb",
+            "Interview Scheduled": "ba",
+            Interviewed: "bp",
+            Offered: "bg",
+            Accepted: "bgr",
+            Rejected: "bc",
+          }[s] || "bgy",
+        );
+      }
+      function atb(t) {
+        return badge(
+          t,
+          {
+            Hospital: "bb",
+            "Nursing Home": "bg",
+            Clinic: "bgr",
+            Agency: "bp",
+            "Healthcare Group": "bc",
+          }[t] || "bgy",
+        );
+      }
+      function dc(t) {
+        return (
+          {
+            Call: "#185FA5",
+            WhatsApp: "#1d9e75",
+            Email: "#534AB7",
+            Meeting: "#0F6E56",
+            "Follow-up": "#BA7517",
+          }[t] || "#888"
+        );
+      }
+
+      var cur360 = null;
+      function go(p) {
+        document.querySelectorAll(".pg").forEach(function (x) {
+          x.classList.remove("on");
+        });
+        document.querySelectorAll(".nav").forEach(function (x) {
+          x.classList.remove("on");
+        });
+        var pg = document.getElementById("pg-" + p);
+        if (pg) pg.classList.add("on");
+        document.querySelectorAll(".nav").forEach(function (x) {
+          if (x.textContent.trim() === PG[p]) x.classList.add("on");
+        });
+        document.getElementById("ttl").textContent = PG[p] || p;
+        if (p === "accounts") backToList();
+        renderAll();
+      }
+      function backToList() {
+        cur360 = null;
+        document.getElementById("acclist").style.display = "block";
+        document.getElementById("acc360").style.display = "none";
+      }
+      function show360(id) {
+        cur360 = id;
+        document.getElementById("acclist").style.display = "none";
+        document.getElementById("acc360").style.display = "block";
+        render360(id);
+      }
+      function renderAll() {
+        renderDash();
+        renderAccGrid();
+        renderContacts();
+        renderOpps();
+        renderPipeline();
+        renderActs();
+        renderSubs();
+        renderReports();
+        if (cur360) render360(cur360);
+      }
+
+      function renderDash() {
+        var t = tod(),
+          od = D.activities.filter(function (a) {
+            return a.followup && a.followup <= t && !a.done;
+          }),
+          openJobs = D.opportunities.filter(function (o) {
+            return (
+              o.stage !== "Placement" && o.stage !== "After-sales Follow-up"
+            );
+          }),
+          activeVac = D.opportunities.filter(function (o) {
+            return o.stage === "Active Vacancy";
+          }),
+          placedJobs = D.opportunities.filter(function (o) {
+            return o.stage === "Placement";
+          }),
+          confirmedOpps = D.opportunities.filter(function (o) {
+            return isActive(o);
+          }),
+          totalReq = confirmedOpps.reduce(function (s, o) {
+            return s + reqTotal(o);
+          }, 0),
+          totalFil = confirmedOpps.reduce(function (s, o) {
+            return s + filTotal(o);
+          }, 0),
+          totalOut = totalReq - totalFil;
+        document.getElementById("dstats-jobs").innerHTML = [
+          {
+            l: "Open job orders",
+            v: openJobs.length,
+            sub: "All non-closed stages",
+          },
+          {
+            l: "Active vacancies",
+            v: activeVac.length,
+            sub: "Confirmed, sourcing now",
+          },
+          {
+            l: "Placed job orders",
+            v: placedJobs.length,
+            sub: "Reached Placement stage",
+          },
+          { l: "Overdue follow-ups", v: od.length, sub: "Past follow-up date" },
+        ]
+          .map(function (s) {
+            return (
+              '<div class="sc"><div class="sl">' +
+              s.l +
+              '</div><div class="sv">' +
+              s.v +
+              '</div><div class="sv-sub">' +
+              s.sub +
+              "</div></div>"
+            );
+          })
+          .join("");
+        document.getElementById("dstats-hc").innerHTML = [
+          {
+            l: "Total heads requested",
+            v: totalReq,
+            sub: "Confirmed orders only",
+          },
+          { l: "Heads filled", v: totalFil, sub: "Confirmed placements" },
+          { l: "Heads outstanding", v: totalOut, sub: "Still to be filled" },
+        ]
+          .map(function (s) {
+            return (
+              '<div class="sc"><div class="sl">' +
+              s.l +
+              '</div><div class="sv">' +
+              s.v +
+              '</div><div class="sv-sub">' +
+              s.sub +
+              "</div></div>"
+            );
+          })
+          .join("");
+        document.getElementById("hc-equation").textContent =
+          "Total heads requested (" +
+          totalReq +
+          ") = Heads filled (" +
+          totalFil +
+          ") + Heads outstanding (" +
+          totalOut +
+          ")";
+        var ra = []
+          .concat(D.activities)
+          .sort(function (a, b) {
+            return b.date > a.date ? 1 : -1;
+          })
+          .slice(0, 5);
+        document.getElementById("dacts").innerHTML = ra.length
+          ? "<table><thead><tr><th>Type</th><th>Account</th><th>Date</th></tr></thead><tbody>" +
+            ra
+              .map(function (a) {
+                return (
+                  "<tr><td>" +
+                  tpb(a.type) +
+                  "</td><td>" +
+                  an(a.accountId) +
+                  "</td><td>" +
+                  a.date +
+                  "</td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No activities yet</div>';
+        document.getElementById("dod").innerHTML = od.length
+          ? "<table><thead><tr><th>Account</th><th>Due</th><th>Type</th></tr></thead><tbody>" +
+            od
+              .slice(0, 5)
+              .map(function (a) {
+                return (
+                  "<tr><td>" +
+                  an(a.accountId) +
+                  '</td><td class="od">' +
+                  a.followup +
+                  "</td><td>" +
+                  tpb(a.type) +
+                  "</td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No overdue follow-ups</div>';
+      }
+
+      function renderAccGrid() {
+        var t = tod();
+        document.getElementById("accgrid").innerHTML = D.accounts
+          .map(function (a) {
+            var opps = D.opportunities.filter(function (o) {
+                return o.accountId === a.id;
+              }),
+              acts = D.activities.filter(function (x) {
+                return x.accountId === a.id;
+              }),
+              ov = acts.filter(function (x) {
+                return x.followup && x.followup <= t && !x.done;
+              }).length,
+              la = [].concat(acts).sort(function (x, y) {
+                return y.date > x.date ? 1 : -1;
+              })[0],
+              nextFU = acts
+                .filter(function (x) {
+                  return x.followup && !x.done && x.significant;
+                })
+                .sort(function (x, y) {
+                  return x.followup > y.followup ? 1 : -1;
+                })[0],
+              openJ = opps.filter(function (o) {
+                return (
+                  o.stage !== "Placement" && o.stage !== "After-sales Follow-up"
+                );
+              }).length,
+              placedJ = opps.filter(function (o) {
+                return o.stage === "Placement";
+              }).length,
+              confirmedO = opps.filter(function (o) {
+                return isActive(o);
+              }),
+              totalReq = confirmedO.reduce(function (s, o) {
+                return s + reqTotal(o);
+              }, 0),
+              totalFil = confirmedO.reduce(function (s, o) {
+                return s + filTotal(o);
+              }, 0);
+            return (
+              '<div class="acc-card" onclick="show360(\'' +
+              a.id +
+              '\')"><div class="an">' +
+              a.name +
+              '</div><div class="ams">' +
+              atb(a.type) +
+              badge(a.status, a.status === "Active" ? "bgr" : "bgy") +
+              (ov
+                ? '<span style="font-size:11px;color:#c00;font-weight:700">⚠ ' +
+                  ov +
+                  " overdue</span>"
+                : "") +
+              '</div><div class="mst"><div class="ms"><div class="msv">' +
+              openJ +
+              '</div><div class="msl">Open jobs</div></div><div class="ms"><div class="msv">' +
+              placedJ +
+              '</div><div class="msl">Placed jobs</div></div><div class="ms"><div class="msv">' +
+              totalFil +
+              "/" +
+              totalReq +
+              '</div><div class="msl">Heads filled</div></div><div class="ms"><div class="msv">' +
+              acts.length +
+              '</div><div class="msl">Activities</div></div></div>' +
+              (nextFU
+                ? '<div style="margin-top:8px;font-size:11px;background:#fff8e8;border:1px solid #f0dfa0;border-radius:4px;padding:4px 8px;color:#7a4e0a">📌 Follow-up: ' +
+                  nextFU.followup +
+                  " · " +
+                  nextFU.notes.slice(0, 38) +
+                  "...</div>"
+                : "") +
+              '<div style="margin-top:6px;font-size:10px;color:#999">' +
+              (la
+                ? "Last activity: " + la.date + " · " + la.type
+                : "No activities yet") +
+              "</div></div>"
+            );
+          })
+          .join("");
+      }
+
+      function render360(id) {
+        var acc = D.accounts.find(function (a) {
+          return a.id === id;
+        });
+        if (!acc) return;
+        var t = tod(),
+          cts = D.contacts.filter(function (c) {
+            return c.accountId === id;
+          }),
+          opps = D.opportunities.filter(function (o) {
+            return o.accountId === id;
+          }),
+          acts = []
+            .concat(
+              D.activities.filter(function (a) {
+                return a.accountId === id;
+              }),
+            )
+            .sort(function (a, b) {
+              return b.date > a.date ? 1 : -1;
+            }),
+          subs = D.submissions.filter(function (s) {
+            return s.accountId === id;
+          }),
+          od = acts.filter(function (a) {
+            return a.followup && a.followup <= t && !a.done;
+          }).length,
+          openJ = opps.filter(function (o) {
+            return (
+              o.stage !== "Placement" && o.stage !== "After-sales Follow-up"
+            );
+          }).length,
+          placedJ = opps.filter(function (o) {
+            return o.stage === "Placement";
+          }).length,
+          confirmedO = opps.filter(function (o) {
+            return isActive(o);
+          }),
+          totalReq = confirmedO.reduce(function (s, o) {
+            return s + reqTotal(o);
+          }, 0),
+          totalFil = confirmedO.reduce(function (s, o) {
+            return s + filTotal(o);
+          }, 0),
+          sigFU = acts
+            .filter(function (a) {
+              return a.followup && !a.done && a.significant;
+            })
+            .sort(function (a, b) {
+              return a.followup > b.followup ? 1 : -1;
+            });
+        var feed = acts.length
+          ? acts
+              .map(function (a) {
+                var isOd = a.followup && a.followup <= t && !a.done;
+                return (
+                  '<div class="aitem"><div class="arow"><div class="dot" style="background:' +
+                  dc(a.type) +
+                  '"></div><div class="abody"><div class="ahdr">' +
+                  tpb(a.type) +
+                  (a.significant
+                    ? '<span style="font-size:10px;background:#fff8e8;color:#7a4e0a;border-radius:3px;padding:1px 5px;font-weight:700">★</span>'
+                    : "") +
+                  '<span class="adate">' +
+                  a.date +
+                  "</span>" +
+                  (a.followup
+                    ? '<span class="adate ' +
+                      (isOd ? "od" : "") +
+                      '">→ ' +
+                      a.followup +
+                      "</span>"
+                    : "") +
+                  '</div><div class="anote">' +
+                  (a.notes || "—") +
+                  "</div></div><button class=\"btn\" onclick=\"openM('activity','" +
+                  a.id +
+                  "')\">Edit</button></div></div>"
+                );
+              })
+              .join("")
+          : '<div class="empty">No activities yet</div>';
+        var fuHtml = sigFU.length
+          ? sigFU
+              .map(function (a) {
+                var isOd = a.followup <= t;
+                return (
+                  '<div style="padding:8px 12px;border-bottom:1px solid #f0f0ec;font-size:12px;display:flex;gap:10px;align-items:center"><span style="white-space:nowrap;font-size:11px;' +
+                  (isOd ? "color:#c00;font-weight:700" : "color:#888") +
+                  '">' +
+                  a.followup +
+                  '</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                  a.notes +
+                  "</span></div>"
+                );
+              })
+              .join("")
+          : '<div class="empty">No significant follow-ups</div>';
+        var ctHtml = cts.length
+          ? "<table><thead><tr><th>Name</th><th>Role</th><th>Phone</th></tr></thead><tbody>" +
+            cts
+              .map(function (c) {
+                return (
+                  "<tr><td><b>" +
+                  c.name +
+                  "</b></td><td>" +
+                  c.role +
+                  "</td><td>" +
+                  (c.phone || "—") +
+                  "</td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No contacts</div>';
+        var opHtml = opps.length
+          ? '<table><thead><tr><th style="width:36%">Title</th><th style="width:22%">Stage</th><th style="width:20%">Req / Filled</th><th style="width:22%">Progress</th></tr></thead><tbody>' +
+            opps
+              .map(function (o) {
+                var req = reqTotal(o),
+                  fil = filTotal(o),
+                  pct = req > 0 ? Math.round((fil / req) * 100) : 0;
+                var bc =
+                  pct >= 100
+                    ? "prog-fill"
+                    : pct > 0
+                      ? "prog-fill prog-fill-part"
+                      : "prog-fill";
+                return (
+                  "<tr style=\"cursor:pointer\" onclick=\"openM('opportunity','" +
+                  o.id +
+                  '\')"><td style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                  o.title +
+                  "</td><td>" +
+                  stb(o.stage) +
+                  '</td><td style="text-align:center">' +
+                  req +
+                  " / " +
+                  fil +
+                  '</td><td><div style="font-size:10px;color:#888">' +
+                  pct +
+                  '%</div><div class="prog-bar"><div class="' +
+                  bc +
+                  '" style="width:' +
+                  pct +
+                  '%"></div></div></td></tr>'
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No job orders</div>';
+        var sbHtml = subs.length
+          ? '<table><thead><tr><th style="width:24%">Candidate</th><th style="width:10%">Role</th><th style="width:18%">Status</th><th style="width:40%">Notes</th><th style="width:8%"></th></tr></thead><tbody>' +
+            subs
+              .map(function (s) {
+                return (
+                  "<tr><td><b>" +
+                  s.candidateName +
+                  "</b></td><td>" +
+                  s.role +
+                  "</td><td>" +
+                  subb(s.status) +
+                  '</td><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#666">' +
+                  (s.rejection ? "Rejected: " + s.rejection : s.notes || "—") +
+                  "</td><td><button class=\"btn\" onclick=\"openM('submission','" +
+                  s.id +
+                  "')\">Edit</button></td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No submissions</div>';
+        document.getElementById("a360c").innerHTML =
+          '<div class="a3hdr"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div><div class="a3name">' +
+          acc.name +
+          '</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;align-items:center">' +
+          atb(acc.type) +
+          badge(acc.status, acc.status === "Active" ? "bgr" : "bgy") +
+          (acc.address
+            ? '<span style="font-size:11px;color:#777">' +
+              acc.address +
+              "</span>"
+            : "") +
+          "</div>" +
+          (acc.notes
+            ? '<div style="font-size:12px;color:#666;max-width:460px">' +
+              acc.notes +
+              "</div>"
+            : "") +
+          '</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" onclick="openM(\'account\',\'' +
+          id +
+          "')\">Edit</button><button class=\"btn btnp\" onclick=\"openM('activity',null,'" +
+          id +
+          "')\">+ Log activity</button><button class=\"btn btnp\" onclick=\"openM('opportunity',null,'" +
+          id +
+          '\')">+ Add job order</button></div></div><div class="a3stats"><div class="a3s"><div class="a3sv">' +
+          cts.length +
+          '</div><div class="a3sl">Contacts</div></div><div class="a3s"><div class="a3sv">' +
+          openJ +
+          '</div><div class="a3sl">Open jobs</div></div><div class="a3s"><div class="a3sv">' +
+          placedJ +
+          '</div><div class="a3sl">Placed jobs</div></div><div class="a3s"><div class="a3sv">' +
+          totalReq +
+          '</div><div class="a3sl">Heads req</div></div><div class="a3s"><div class="a3sv">' +
+          totalFil +
+          '</div><div class="a3sl">Heads filled</div></div><div class="a3s"><div class="a3sv ' +
+          (od ? "od" : "") +
+          '">' +
+          od +
+          '</div><div class="a3sl">Overdue</div></div></div></div><div class="a3body"><div class="a3sec a3full"><div class="a3sh"><span>Activity feed</span><button class="btn" onclick="openM(\'activity\',null,\'' +
+          id +
+          "')\">+ Log</button></div>" +
+          feed +
+          '</div><div class="a3sec"><div class="a3sh">★ Significant follow-ups</div>' +
+          fuHtml +
+          '</div><div class="a3sec"><div class="a3sh"><span>Contacts</span><button class="btn" onclick="openM(\'contact\',null,\'' +
+          id +
+          "')\">+ Add</button></div>" +
+          ctHtml +
+          '</div><div class="a3sec a3full"><div class="a3sh"><span>Job orders — headcount progress</span><button class="btn" onclick="openM(\'opportunity\',null,\'' +
+          id +
+          "')\">+ Add</button></div>" +
+          opHtml +
+          '</div><div class="a3sec a3full"><div class="a3sh"><span>Candidate submissions</span><button class="btn" onclick="openM(\'submission\',null,\'' +
+          id +
+          "')\">+ Add</button></div>" +
+          sbHtml +
+          "</div></div>";
+      }
+
+      function renderContacts() {
+        document.getElementById("ctb").innerHTML = D.contacts.length
+          ? D.contacts
+              .map(function (c) {
+                return (
+                  "<tr><td><b>" +
+                  c.name +
+                  "</b></td><td>" +
+                  c.role +
+                  "</td><td>" +
+                  an(c.accountId) +
+                  "</td><td>" +
+                  (c.phone || "—") +
+                  "</td><td><button class=\"btn\" onclick=\"openM('contact','" +
+                  c.id +
+                  "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('contacts','" +
+                  c.id +
+                  "')\">Del</button></td></tr>"
+                );
+              })
+              .join("")
+          : '<tr><td colspan="5" class="empty">No contacts</td></tr>';
+      }
+      function renderOpps() {
+        document.getElementById("otb").innerHTML = D.opportunities.length
+          ? D.opportunities
+              .map(function (o) {
+                var req = reqTotal(o),
+                  fil = filTotal(o),
+                  pct = req > 0 ? Math.round((fil / req) * 100) : 0;
+                var bc =
+                  pct >= 100
+                    ? "prog-fill"
+                    : pct > 0
+                      ? "prog-fill prog-fill-part"
+                      : "prog-fill";
+                var lbl = isActive(o)
+                  ? ""
+                  : '<span style="font-size:10px;color:#aaa"> (pipeline)</span>';
+                return (
+                  '<tr><td style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                  o.title +
+                  lbl +
+                  "</td><td>" +
+                  an(o.accountId) +
+                  "</td><td>" +
+                  stb(o.stage) +
+                  '</td><td style="text-align:center">' +
+                  req +
+                  '</td><td style="text-align:center">' +
+                  fil +
+                  '</td><td><div style="font-size:10px;color:#888">' +
+                  pct +
+                  '%</div><div class="prog-bar"><div class="' +
+                  bc +
+                  '" style="width:' +
+                  pct +
+                  '%"></div></div></td><td><button class="btn" onclick="openM(\'opportunity\',\'' +
+                  o.id +
+                  "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('opportunities','" +
+                  o.id +
+                  "')\">Del</button></td></tr>"
+                );
+              })
+              .join("")
+          : '<tr><td colspan="7" class="empty">No opportunities</td></tr>';
+      }
+      function renderActs() {
+        var t = tod();
+        document.getElementById("atb").innerHTML = D.activities.length
+          ? []
+              .concat(D.activities)
+              .sort(function (a, b) {
+                return b.date > a.date ? 1 : -1;
+              })
+              .map(function (a) {
+                var isOd = a.followup && a.followup <= t && !a.done;
+                return (
+                  "<tr><td>" +
+                  tpb(a.type) +
+                  (a.significant
+                    ? '<span style="color:#7a4e0a;margin-left:3px">★</span>'
+                    : "") +
+                  "</td><td>" +
+                  an(a.accountId) +
+                  '</td><td style="color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                  (a.notes || "—") +
+                  "</td><td>" +
+                  a.date +
+                  "</td><td " +
+                  (isOd ? 'class="od"' : "") +
+                  ">" +
+                  (a.followup || "—") +
+                  "</td><td><button class=\"btn\" onclick=\"openM('activity','" +
+                  a.id +
+                  "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('activities','" +
+                  a.id +
+                  "')\">Del</button></td></tr>"
+                );
+              })
+              .join("")
+          : '<tr><td colspan="6" class="empty">No activities</td></tr>';
+      }
+      function renderSubs() {
+        document.getElementById("stb").innerHTML = D.submissions.length
+          ? D.submissions
+              .map(function (s) {
+                return (
+                  "<tr><td><b>" +
+                  s.candidateName +
+                  "</b></td><td>" +
+                  an(s.accountId) +
+                  "</td><td>" +
+                  s.role +
+                  "</td><td>" +
+                  subb(s.status) +
+                  "</td><td><button class=\"btn\" onclick=\"openM('submission','" +
+                  s.id +
+                  "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('submissions','" +
+                  s.id +
+                  "')\">Del</button></td></tr>"
+                );
+              })
+              .join("")
+          : '<tr><td colspan="5" class="empty">No submissions</td></tr>';
+      }
+      function renderPipeline() {
+        document.getElementById("pipeboard").innerHTML = STAGES.map(
+          function (s) {
+            var op = D.opportunities.filter(function (o) {
+              return o.stage === s;
+            });
+            return (
+              '<div class="pcol"><div class="pct">' +
+              s +
+              " (" +
+              op.length +
+              ")</div>" +
+              (op.length
+                ? op
+                    .map(function (o) {
+                      var req = reqTotal(o),
+                        fil = filTotal(o);
+                      return (
+                        "<div class=\"pcard\" onclick=\"openM('opportunity','" +
+                        o.id +
+                        '\')"><div class="pctitle">' +
+                        o.title +
+                        '</div><div class="pcacc">' +
+                        an(o.accountId) +
+                        '</div><div style="font-size:10px;color:#888;margin-top:2px">' +
+                        fil +
+                        "/" +
+                        req +
+                        " filled</div></div>"
+                      );
+                    })
+                    .join("")
+                : '<div style="font-size:10px;color:#bbb">Empty</div>') +
+              "</div>"
+            );
+          },
+        ).join("");
+      }
+      function renderReports() {
+        var confirmedOpps = D.opportunities.filter(function (o) {
+            return isActive(o);
+          }),
+          totalReq = confirmedOpps.reduce(function (s, o) {
+            return s + reqTotal(o);
+          }, 0),
+          totalFil = confirmedOpps.reduce(function (s, o) {
+            return s + filTotal(o);
+          }, 0),
+          totalOut = totalReq - totalFil,
+          placedJ = D.opportunities.filter(function (o) {
+            return o.stage === "Placement";
+          }),
+          rev = placedJ.reduce(function (s, o) {
+            return s + Number(o.value || 0);
+          }, 0),
+          t = tod(),
+          od = D.activities.filter(function (a) {
+            return a.followup && a.followup <= t && !a.done;
+          }).length;
+        document.getElementById("rstats").innerHTML = [
+          { l: "Total heads requested", v: totalReq },
+          { l: "Heads filled", v: totalFil },
+          { l: "Heads outstanding", v: totalOut },
+          { l: "Placed job orders", v: placedJ.length },
+          { l: "Placement revenue", v: "$" + rev.toLocaleString() },
+          { l: "Overdue follow-ups", v: od },
+        ]
+          .map(function (s) {
+            return (
+              '<div class="sc"><div class="sl">' +
+              s.l +
+              '</div><div class="sv">' +
+              s.v +
+              "</div></div>"
+            );
+          })
+          .join("");
+        var pos = {};
+        POS.forEach(function (p) {
+          pos[p] = { req: 0, fil: 0 };
+        });
+        confirmedOpps.forEach(function (o) {
+          pos.HCA.req += o.hca || 0;
+          pos.HCA.fil += o.hca_f || 0;
+          pos.NA.req += o.na || 0;
+          pos.NA.fil += o.na_f || 0;
+          pos.EN.req += o.en || 0;
+          pos.EN.fil += o.en_f || 0;
+          pos.SN.req += o.sn || 0;
+          pos.SN.fil += o.sn_f || 0;
+          pos.Others.req += o.others || 0;
+          pos.Others.fil += o.others_f || 0;
+        });
+        document.getElementById("rpos").innerHTML = POS.map(function (p) {
+          var r = pos[p];
+          return (
+            "<tr><td><b>" +
+            p +
+            "</b></td><td>" +
+            r.req +
+            "</td><td>" +
+            r.fil +
+            '</td><td style="' +
+            (r.req - r.fil > 0 ? "color:#c00;font-weight:700" : "color:#888") +
+            '">' +
+            (r.req - r.fil) +
+            "</td></tr>"
+          );
+        }).join("");
+        var fuActs = []
+          .concat(
+            D.activities.filter(function (a) {
+              return a.followup && !a.done;
+            }),
+          )
+          .sort(function (a, b) {
+            return a.followup > b.followup ? 1 : -1;
+          });
+        document.getElementById("rfu").innerHTML = fuActs.length
+          ? '<table><thead><tr><th style="width:18%">Due</th><th style="width:28%">Account</th><th style="width:14%">Type</th><th style="width:40%">Notes</th></tr></thead><tbody>' +
+            fuActs
+              .map(function (a) {
+                var isOd = a.followup <= t;
+                return (
+                  '<tr><td class="' +
+                  (isOd ? "od" : "") +
+                  '">' +
+                  a.followup +
+                  '</td><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                  an(a.accountId) +
+                  "</td><td>" +
+                  tpb(a.type) +
+                  '</td><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#666">' +
+                  (a.notes || "—") +
+                  "</td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty">No outstanding follow-ups</div>';
+        var partial = confirmedOpps
+          .filter(function (o) {
+            var req = reqTotal(o),
+              fil = filTotal(o);
+            return req > 0 && fil < req;
+          })
+          .sort(function (a, b) {
+            return reqTotal(b) - filTotal(b) - (reqTotal(a) - filTotal(a));
+          });
+        document.getElementById("rpartial").innerHTML = partial.length
+          ? partial
+              .map(function (o) {
+                var req = reqTotal(o),
+                  fil = filTotal(o);
+                return (
+                  '<tr><td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700">' +
+                  o.title +
+                  "</td><td>" +
+                  req +
+                  "</td><td>" +
+                  fil +
+                  '</td><td style="color:#c00;font-weight:700">' +
+                  (req - fil) +
+                  "</td></tr>"
+                );
+              })
+              .join("")
+          : '<tr><td colspan="4" class="empty">All confirmed orders fully filled</td></tr>';
+        var sc = {};
+        STAGES.forEach(function (s) {
+          sc[s] = 0;
+        });
+        D.opportunities.forEach(function (o) {
+          sc[o.stage]++;
+        });
+        document.getElementById("rstg").innerHTML = STAGES.map(function (s) {
+          return "<tr><td>" + stb(s) + "</td><td>" + sc[s] + "</td></tr>";
+        }).join("");
+      }
+
+      function del(type, id) {
+        if (!confirm("Delete?")) return;
+        D[type] = D[type].filter(function (r) {
+          return r.id !== id;
+        });
+        save();
+        renderAll();
+      }
+      function aOpts(sel) {
+        return D.accounts
+          .map(function (a) {
+            return (
+              '<option value="' +
+              a.id +
+              '"' +
+              (a.id === sel ? " selected" : "") +
+              ">" +
+              a.name +
+              "</option>"
+            );
+          })
+          .join("");
+      }
+
+      function openM(type, recId, presetAcc) {
+        var rec = null;
+        if (recId) {
+          var src = {
+            account: D.accounts,
+            contact: D.contacts,
+            opportunity: D.opportunities,
+            activity: D.activities,
+            submission: D.submissions,
+          }[type];
+          if (src)
+            rec = src.find(function (x) {
+              return x.id === recId;
+            });
+        }
+        var sa = rec ? rec.accountId : presetAcc || "";
+        var b = document.getElementById("mbox");
+        if (type === "account") {
+          b.innerHTML =
+            "<h3>" +
+            (rec ? "Edit" : "New") +
+            ' account</h3><div class="fg"><label>Name *</label><input id="fn" value="' +
+            (rec ? rec.name : "") +
+            '"></div><div class="frow"><div class="fg"><label>Type</label><select id="ft">' +
+            ACCT.map(function (t) {
+              return (
+                "<option" +
+                (rec && rec.type === t ? " selected" : "") +
+                ">" +
+                t +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div><div class="fg"><label>Status</label><select id="fst"><option' +
+            (!rec || rec.status === "Active" ? " selected" : "") +
+            ">Active</option><option" +
+            (rec && rec.status === "Inactive" ? " selected" : "") +
+            '>Inactive</option></select></div></div><div class="fg"><label>Address</label><input id="fa" value="' +
+            (rec ? rec.address || "" : "") +
+            '"></div><div class="fg"><label>Notes</label><textarea id="fno">' +
+            (rec ? rec.notes || "" : "") +
+            '</textarea></div><div class="mact"><button class="btn" onclick="closeM()">Cancel</button><button class="btn btnp" onclick="saveAcc(\'' +
+            (rec ? rec.id : "") +
+            "')\">Save</button></div>";
+        } else if (type === "contact") {
+          b.innerHTML =
+            "<h3>" +
+            (rec ? "Edit" : "New") +
+            ' contact</h3><div class="frow"><div class="fg"><label>Name *</label><input id="fn" value="' +
+            (rec ? rec.name : "") +
+            '"></div><div class="fg"><label>Role</label><select id="fr">' +
+            ROLES.map(function (r) {
+              return (
+                "<option" +
+                (rec && rec.role === r ? " selected" : "") +
+                ">" +
+                r +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div></div><div class="fg"><label>Account</label><select id="fa"><option value="">-- None --</option>' +
+            aOpts(sa) +
+            '</select></div><div class="frow"><div class="fg"><label>Phone</label><input id="fp" value="' +
+            (rec ? rec.phone || "" : "") +
+            '"></div><div class="fg"><label>Email</label><input id="fe" value="' +
+            (rec ? rec.email || "" : "") +
+            '"></div></div><div class="mact"><button class="btn" onclick="closeM()">Cancel</button><button class="btn btnp" onclick="saveCt(\'' +
+            (rec ? rec.id : "") +
+            "')\">Save</button></div>";
+        } else if (type === "opportunity") {
+          b.innerHTML =
+            "<h3>" +
+            (rec ? "Edit" : "New") +
+            ' job order</h3><div class="fg"><label>Title *</label><input id="ft" value="' +
+            (rec ? rec.title : "") +
+            '"></div><div class="fg"><label>Account</label><select id="fa"><option value="">-- None --</option>' +
+            aOpts(sa) +
+            '</select></div><div class="frow"><div class="fg"><label>Stage</label><select id="fs">' +
+            STAGES.map(function (s) {
+              return (
+                "<option" +
+                (rec && rec.stage === s ? " selected" : "") +
+                ">" +
+                s +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div><div class="fg"><label>Value (SGD)</label><input id="fv" type="number" value="' +
+            (rec ? rec.value || 0 : 0) +
+            '"></div></div><div class="fg"><label>Headcount — Requested vs Filled</label><table class="pos-table"><thead><tr><th style="text-align:left;width:30%">Position</th>' +
+            POS.map(function (p) {
+              return "<th>" + p + "</th>";
+            }).join("") +
+            '</tr></thead><tbody><tr><td style="font-weight:700;text-align:left;padding:4px 8px">Requested</td>' +
+            POS.map(function (p) {
+              var k = p.toLowerCase();
+              return (
+                '<td><input class="pos-input" type="number" id="req_' +
+                k +
+                '" min="0" value="' +
+                (rec ? rec[k] || 0 : 0) +
+                '"></td>'
+              );
+            }).join("") +
+            '</tr><tr><td style="font-weight:700;text-align:left;padding:4px 8px">Filled</td>' +
+            POS.map(function (p) {
+              var k = p.toLowerCase() + "_f";
+              return (
+                '<td><input class="pos-input" type="number" id="fil_' +
+                k +
+                '" min="0" value="' +
+                (rec ? rec[k] || 0 : 0) +
+                '"></td>'
+              );
+            }).join("") +
+            '</tr></tbody></table><div style="font-size:11px;color:#888;margin-top:4px">Headcount counted from Active Vacancy stage onwards.</div></div><div class="fg"><label>Notes</label><textarea id="fno">' +
+            (rec ? rec.notes || "" : "") +
+            '</textarea></div><div class="mact"><button class="btn" onclick="closeM()">Cancel</button><button class="btn btnp" onclick="saveOp(\'' +
+            (rec ? rec.id : "") +
+            "')\">Save</button></div>";
+        } else if (type === "activity") {
+          b.innerHTML =
+            "<h3>" +
+            (rec ? "Edit" : "Log") +
+            ' activity</h3><div class="frow"><div class="fg"><label>Type</label><select id="ft">' +
+            ATYPES.map(function (t) {
+              return (
+                "<option" +
+                (rec && rec.type === t ? " selected" : "") +
+                ">" +
+                t +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div><div class="fg"><label>Date</label><input type="date" id="fd" value="' +
+            (rec ? rec.date : tod()) +
+            '"></div></div><div class="fg"><label>Account</label><select id="fa"><option value="">-- None --</option>' +
+            aOpts(sa) +
+            '</select></div><div class="fg"><label>Notes</label><textarea id="fno">' +
+            (rec ? rec.notes || "" : "") +
+            '</textarea></div><div class="fg"><label>Follow-up date</label><input type="date" id="ffu" value="' +
+            (rec ? rec.followup || "" : "") +
+            '"></div><div class="fg"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-weight:normal"><input type="checkbox" id="fsig"' +
+            (rec && rec.significant ? " checked" : "") +
+            ' style="width:auto;margin:0"> <b>Mark as significant</b> — surfaces in account card &amp; reports</label></div><div class="mact"><button class="btn" onclick="closeM()">Cancel</button><button class="btn btnp" onclick="saveAct(\'' +
+            (rec ? rec.id : "") +
+            "')\">Save</button></div>";
+        } else if (type === "submission") {
+          b.innerHTML =
+            "<h3>" +
+            (rec ? "Edit" : "New") +
+            ' submission</h3><div class="frow"><div class="fg"><label>Candidate *</label><input id="fn" value="' +
+            (rec ? rec.candidateName : "") +
+            '"></div><div class="fg"><label>Role</label><select id="fr">' +
+            POS.map(function (p) {
+              return (
+                "<option" +
+                (rec && rec.role === p ? " selected" : "") +
+                ">" +
+                p +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div></div><div class="fg"><label>Account</label><select id="fa"><option value="">-- None --</option>' +
+            aOpts(sa) +
+            '</select></div><div class="fg"><label>Status</label><select id="fss">' +
+            SS.map(function (s) {
+              return (
+                "<option" +
+                (rec && rec.status === s ? " selected" : "") +
+                ">" +
+                s +
+                "</option>"
+              );
+            }).join("") +
+            '</select></div><div class="fg"><label>Rejection reason</label><input id="frej" value="' +
+            (rec ? rec.rejection || "" : "") +
+            '"></div><div class="fg"><label>Notes</label><textarea id="fno">' +
+            (rec ? rec.notes || "" : "") +
+            '</textarea></div><div class="mact"><button class="btn" onclick="closeM()">Cancel</button><button class="btn btnp" onclick="saveSub(\'' +
+            (rec ? rec.id : "") +
+            "')\">Save</button></div>";
+        }
+        document.getElementById("mbg").classList.add("on");
+      }
+      function closeM() {
+        document.getElementById("mbg").classList.remove("on");
+      }
+      function saveAcc(id) {
+        var n = document.getElementById("fn").value.trim();
+        if (!n) return alert("Name required");
+        var r = {
+          id: id || uid(),
+          name: n,
+          type: document.getElementById("ft").value,
+          status: document.getElementById("fst").value,
+          address: document.getElementById("fa").value,
+          notes: document.getElementById("fno").value,
+        };
+        if (id) {
+          var i = D.accounts.findIndex(function (x) {
+            return x.id === id;
+          });
+          D.accounts[i] = r;
+        } else D.accounts.push(r);
+        save();
+        closeM();
+        renderAll();
+      }
+      function saveCt(id) {
+        var n = document.getElementById("fn").value.trim();
+        if (!n) return alert("Name required");
+        var r = {
+          id: id || uid(),
+          name: n,
+          role: document.getElementById("fr").value,
+          accountId: document.getElementById("fa").value,
+          phone: document.getElementById("fp").value,
+          email: document.getElementById("fe").value,
+        };
+        if (id) {
+          var i = D.contacts.findIndex(function (x) {
+            return x.id === id;
+          });
+          D.contacts[i] = r;
+        } else D.contacts.push(r);
+        save();
+        closeM();
+        renderAll();
+      }
+      function saveOp(id) {
+        var t = document.getElementById("ft").value.trim();
+        if (!t) return alert("Title required");
+        var r = {
+          id: id || uid(),
+          title: t,
+          accountId: document.getElementById("fa").value,
+          stage: document.getElementById("fs").value,
+          value: document.getElementById("fv").value,
+          hca: parseInt(document.getElementById("req_hca").value) || 0,
+          na: parseInt(document.getElementById("req_na").value) || 0,
+          en: parseInt(document.getElementById("req_en").value) || 0,
+          sn: parseInt(document.getElementById("req_sn").value) || 0,
+          others: parseInt(document.getElementById("req_others").value) || 0,
+          hca_f: parseInt(document.getElementById("fil_hca_f").value) || 0,
+          na_f: parseInt(document.getElementById("fil_na_f").value) || 0,
+          en_f: parseInt(document.getElementById("fil_en_f").value) || 0,
+          sn_f: parseInt(document.getElementById("fil_sn_f").value) || 0,
+          others_f:
+            parseInt(document.getElementById("fil_others_f").value) || 0,
+          notes: document.getElementById("fno").value,
+        };
+        if (id) {
+          var i = D.opportunities.findIndex(function (x) {
+            return x.id === id;
+          });
+          D.opportunities[i] = r;
+        } else D.opportunities.push(r);
+        save();
+        closeM();
+        renderAll();
+      }
+      function saveAct(id) {
+        var r = {
+          id: id || uid(),
+          type: document.getElementById("ft").value,
+          date: document.getElementById("fd").value,
+          accountId: document.getElementById("fa").value,
+          notes: document.getElementById("fno").value,
+          followup: document.getElementById("ffu").value,
+          significant: document.getElementById("fsig").checked,
+          done: false,
+        };
+        if (id) {
+          var i = D.activities.findIndex(function (x) {
+            return x.id === id;
+          });
+          D.activities[i] = r;
+        } else D.activities.push(r);
+        save();
+        closeM();
+        renderAll();
+      }
+      function saveSub(id) {
+        var n = document.getElementById("fn").value.trim();
+        if (!n) return alert("Name required");
+        var r = {
+          id: id || uid(),
+          candidateName: n,
+          role: document.getElementById("fr").value,
+          accountId: document.getElementById("fa").value,
+          status: document.getElementById("fss").value,
+          rejection: document.getElementById("frej").value,
+          notes: document.getElementById("fno").value,
+        };
+        if (id) {
+          var i = D.submissions.findIndex(function (x) {
+            return x.id === id;
+          });
+          D.submissions[i] = r;
+        } else D.submissions.push(r);
+        save();
+        closeM();
+        renderAll();
+      }
+
+      // ============================================================
+      // AI BAR — move API key to a backend function before going live
+      // ============================================================
+      async function doAI() {
+        var inp = document.getElementById("aiin"),
+          resp = document.getElementById("aimsg"),
+          q = inp.value.trim();
+        if (!q) return;
+        resp.style.display = "block";
+        resp.textContent = "Thinking...";
+        try {
+          var res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 500,
+              system:
+                "You are a CRM assistant for Homecare One Singapore. Accounts: " +
+                JSON.stringify(
+                  D.accounts.map(function (a) {
+                    return { id: a.id, name: a.name };
+                  }),
+                ) +
+                ". Today: " +
+                tod() +
+                '. For create actions reply with confirmation + JSON {"action":"create","type":"activity","data":{type,date,accountId,notes,followup,significant:false}}. For questions reply plain English only.',
+              messages: [{ role: "user", content: q }],
+            }),
+          });
+          var d = await res.json(),
+            text = (d.content || [])
+              .filter(function (b) {
+                return b.type === "text";
+              })
+              .map(function (b) {
+                return b.text;
+              })
+              .join(""),
+            jm = text.match(/\{[\s\S]*?"action"[\s\S]*?\}/);
+          resp.textContent =
+            text.replace(/\{[\s\S]*?"action"[\s\S]*?\}/, "").trim() || "Done.";
+          if (jm) {
+            try {
+              var act = JSON.parse(jm[0]);
+              if (act.action === "create" && act.data) {
+                var rec = Object.assign({ id: uid() }, act.data);
+                if (act.type === "activity") D.activities.push(rec);
+                save();
+                renderAll();
+                resp.textContent += " ✓ Saved.";
+              }
+            } catch (e) {}
+          }
+        } catch (e) {
+          resp.textContent = "AI error. Please try again.";
+        }
+        inp.value = "";
+      }
+
+      renderAll();
+    </script>
+  </body>
+</html>
