@@ -12,10 +12,12 @@ console.log('Supabase client initialized:', supabase);
 const VALID_EMAIL = 'rhsnake@gmail.com';
 const VALID_PASSWORD = 'abc123';
 
+// Function to validate login credentials.(Needs to be replaced with Supabase authentication in production)
 function validateLogin(email, password) {
     return email === VALID_EMAIL && password === VALID_PASSWORD;
 }
 
+// Handle form submission for login.
 function handleLogin(event) {
     event.preventDefault();
 
@@ -35,7 +37,8 @@ function handleLogin(event) {
     window.location.href = 'homecare_crm.html';
 }
 
-const form = document.querySelector('form');
+// Attach event listener to the FIRST class with the 'login' selector.
+const form = document.querySelector('.login');
 if (form) {
     form.addEventListener('submit', handleLogin);
 }
