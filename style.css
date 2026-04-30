@@ -91,12 +91,52 @@ button[type="submit"]:hover {
     background: #2b3a41;
 }
 
-.task-item {
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 4px;
+.task-manager,
+.task-list-box {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-top: 20px;
 }
+
+.task-manager h2,
+.task-list-box h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 20px;
+    color: #333;
+}
+
+.task-manager .form-row {
+    margin-bottom: 14px;
+}
+
+.task-manager input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#task-list {
+    min-height: 120px;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    padding: 12px;
+    background: #fafafa;
+}
+
+.task-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background: #fff;
+}
+
+
 /* CRM page styles */
 * {
   box-sizing: border-box;

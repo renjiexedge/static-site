@@ -85,10 +85,40 @@ async function loadTasks() {
         <div class="task-item" data-id="${task.id}">
           <h4>${task.Task_Title}</h4>
           <p>${task.Task_Description}</p>
+          <button type="button" class="edit-btn" data-id="${task.id}">Edit</button>
+          <button type="button" class="delete-btn" data-id="${task.id}">Delete</button>
         </div>
       `
     )
     .join('');
 }
-
+// Load tasks when the page is loaded.
 document.addEventListener('DOMContentLoaded', loadTasks);
+
+async function deleteTask(id) {
+    event.preventDefault();
+    
+    const { error } = await supabase.from('TaskManager').delete().eq('id', id);
+    if (error) {
+        console.error('Error deleting task:', error.message);
+        alert('Error deleting task.');
+    } else {
+        alert('Task deleted successfully!');
+        await loadTasks(); // Refresh the task list after deleting a task.
+    }
+}
+
+// Add click listener on the task list (delegation)
+document.getElementById('task-list').addEventListener('click', (event) => {
+  const btn = event.target;
+
+  // If user clicked a delete button
+  if (btn.classList.contains('delete-btn')) {
+    const id = btn.getAttribute('data-id');
+    if (id) {
+      deleteTask(id);
+    }
+  }
+});
+
+//edit functionality needs to be implemented.
