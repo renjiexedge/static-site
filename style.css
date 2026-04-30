@@ -91,6 +91,12 @@ button[type="submit"]:hover {
     background: #2b3a41;
 }
 
+.task-item {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
 /* CRM page styles */
 * {
   box-sizing: border-box;

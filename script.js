@@ -36,18 +36,17 @@ function handleLogin(event) {
 
     window.location.href = 'homecare_crm.html';
 }
-
 // Attach event listener to the FIRST class with the 'login' selector.
 const form = document.querySelector('.login');
 if (form) {
     form.addEventListener('submit', handleLogin);
 }
-
+// Handle form submission for task manager.
 const tasks = document.querySelector('.task-manager');
 if (tasks) {
     tasks.addEventListener('submit', submitTask);
 }
-
+// Function to submit a new task to the Supabase database.
 async function submitTask(event) {
     event.preventDefault();
     const taskTitle = document.getElementById('task-title')?.value.trim() || '';
@@ -59,5 +58,37 @@ async function submitTask(event) {
         alert('Error submitting task.');
     } else {
         alert('Task submitted successfully!');
+        await loadTasks(); // Refresh the task list after adding a new task.
     }
 }
+
+async function loadTasks() {
+  const { data:tasks, error } = await supabase
+    .from('TaskManager')
+    .select('id, Task_Title, Task_Description');
+
+  if (error) {
+    console.error('Error loading tasks:', error.message);
+    document.getElementById('task-list').innerHTML = '<p>Failed to load tasks.</p>';
+    return;
+  }
+
+  const container = document.getElementById('task-list');
+  if (!tasks || tasks.length === 0) {
+    container.innerHTML = '<p>No tasks yet.</p>';
+    return;
+  }
+
+  container.innerHTML = tasks
+    .map(
+      (task) => `
+        <div class="task-item" data-id="${task.id}">
+          <h4>${task.Task_Title}</h4>
+          <p>${task.Task_Description}</p>
+        </div>
+      `
+    )
+    .join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadTasks);
