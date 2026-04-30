@@ -43,3 +43,21 @@ if (form) {
     form.addEventListener('submit', handleLogin);
 }
 
+const tasks = document.querySelector('.task-manager');
+if (tasks) {
+    tasks.addEventListener('submit', submitTask);
+}
+
+async function submitTask(event) {
+    event.preventDefault();
+    const taskTitle = document.getElementById('task-title')?.value.trim() || '';
+    const taskDesc = document.getElementById('task-desc')?.value.trim() || '';
+    
+    const { error } = await supabase.from('TaskManager').insert([{ Task_Title: taskTitle, Task_Description: taskDesc }]);
+    if (error) {
+        console.error('Error submitting task:', error.message);
+        alert('Error submitting task.');
+    } else {
+        alert('Task submitted successfully!');
+    }
+}
