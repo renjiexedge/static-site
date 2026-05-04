@@ -96,8 +96,6 @@ async function loadTasks() {
 document.addEventListener('DOMContentLoaded', loadTasks);
 
 async function deleteTask(id) {
-    event.preventDefault();
-    
     const { error } = await supabase.from('TaskManager').delete().eq('id', id);
     if (error) {
         console.error('Error deleting task:', error.message);
@@ -108,9 +106,82 @@ async function deleteTask(id) {
     }
 }
 
-// Add click listener on the task list (delegation)
+//lines 108-180 needs to be reviewed and tested for edit functionality. The edit form is created dynamically and attached to the task item when the edit button is clicked. The form allows users to update the task title and description, and then saves the changes to the Supabase database when the save button is clicked. The cancel button allows users to close the edit form without making any changes.
+let activeEditForm = null;
+
+//closes any open edit form before opening a new one to ensure only one edit form is open at a time. It removes the form from the DOM and resets the activeEditForm variable. This function is called when the user clicks the cancel button or when they click the edit button on another task while an edit form is already open.
+function closeEditForm() {
+  if (activeEditForm) {
+    activeEditForm.remove();
+    activeEditForm = null;
+  }
+}
+
+// This function creates and opens an edit form for a specific task item.
+function openEditForm(taskItem, id, currentTitle, currentDesc) {
+  closeEditForm();
+//The form is created dynamically and includes input fields for the title and description, as well as save and cancel buttons.
+  const form = document.createElement('form');
+  form.className = 'edit-form';
+  form.innerHTML = `
+    <div class="edit-form-row">
+      <label>Task title</label>
+      <input type="text" data-edit="title" placeholder="${currentTitle}" />
+    </div>
+    <div class="edit-form-row">
+      <label>Task description</label>
+      <input type="text" data-edit="desc" placeholder="${currentDesc}" />
+    </div>
+    <div class="edit-form-actions">
+      <button type="button" class="confirm-edit-btn">Save</button>
+      <button type="button" class="cancel-edit-btn">Cancel</button>
+    </div>
+  `;
+
+  // It takes the task item element, the task ID, and the current title and description as parameters. 
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+
+  const titleInput = form.querySelector('[data-edit="title"]');
+  const descInput = form.querySelector('[data-edit="desc"]');
+  const confirmBtn = form.querySelector('.confirm-edit-btn');
+  const cancelBtn = form.querySelector('.cancel-edit-btn');
+
+  confirmBtn.addEventListener('click', async () => {
+    const newTitle = titleInput.value.trim() || currentTitle;
+    const newDesc = descInput.value.trim() || currentDesc;
+    if (!newTitle && !newDesc) {
+      alert('Please provide a task title or description to update.');
+      return;
+    }
+    await editTask(id, newTitle, newDesc);
+    closeEditForm();
+  });
+
+  cancelBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    closeEditForm();
+  });
+
+  taskItem.appendChild(form);
+  activeEditForm = form;
+}
+
+// Add edit click listener on the task list. Opens the edit form if valid.
 document.getElementById('task-list').addEventListener('click', (event) => {
   const btn = event.target;
+
+  if (btn.classList.contains('edit-btn')) {
+    const id = btn.getAttribute('data-id');
+    const taskItem = btn.closest('.task-item');
+    if (id && taskItem) {
+      const currentTitle = taskItem.querySelector('h4')?.textContent.trim() || '';
+      const currentDesc = taskItem.querySelector('p')?.textContent.trim() || '';
+      openEditForm(taskItem, id, currentTitle, currentDesc);
+    }
+    return;
+  }
 
   // If user clicked a delete button
   if (btn.classList.contains('delete-btn')) {
@@ -121,4 +192,15 @@ document.getElementById('task-list').addEventListener('click', (event) => {
   }
 });
 
-//edit functionality needs to be implemented.
+async function editTask(id, newTitle, newDesc) {
+    const { error } = await supabase.from('TaskManager').update({ Task_Title: newTitle, Task_Description: newDesc }).eq('id', id);
+    if (error) {
+        console.error('Error editing task:', error.message);
+        alert('Error editing task.');
+    } else {
+        alert('Task edited successfully!');
+        await loadTasks(); // Refresh the task list after editing a task.
+    }
+}
+
+
