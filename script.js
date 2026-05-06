@@ -1666,5 +1666,7 @@ if (typeof window !== "undefined") {
   });
 }
 
+window.go = go;
+
 //Schema for database activities have critical error. Needs more Unique Primary Keys. Possibily same with the other schemas.
 //Need to launch to live to check if the database functions as expected. Test(create, read, update,delete) in live environment.
