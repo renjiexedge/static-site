@@ -375,12 +375,20 @@ async function saveToSupabase() {
     // Separate new vs existing records
     const newAccounts = accounts.filter(a => !a.account_id);
     const existingAccounts = accounts.filter(a => a.account_id);
+    const newContacts = contacts.filter(c => !c.id);
+    const existingContacts = contacts.filter(c => c.id);
 
     // Insert new records
     if (newAccounts.length > 0) {
       const { error: insertError } = await supabase
         .from('accounts')
         .insert(newAccounts);
+      if (insertError) throw insertError;
+    }
+    if (newContacts.length > 0) {
+      const { error: insertError } = await supabase
+        .from('contacts')
+        .insert(newContacts);
       if (insertError) throw insertError;
     }
 
@@ -392,6 +400,13 @@ async function saveToSupabase() {
       if (updateError) throw updateError;
     }
 
+    if (existingContacts.length > 0) {
+      const { error: updateError } = await supabase
+        .from('contacts')
+        .upsert(existingContacts);
+      if (updateError) throw updateError;
+    }
+
     // const results = await Promise.all([
     //   supabase.from("accounts").upsert(accounts),
     //   supabase.from("contacts").upsert(contacts),
@@ -399,13 +414,12 @@ async function saveToSupabase() {
     //   supabase.from("activities").upsert(activities),
     //   supabase.from("submissions").upsert(submissions),
     // ]);
+    //const error = results.find((r) => r.error)?.error;
 
-    const error = results.find((r) => r.error)?.error;
-
-    if (error) {
-      console.error("Error saving CRM data:", error);
-      return;
-    }
+    // if (error) {
+    //   console.error("Error saving CRM data:", error);
+    //   return;
+    // }
 
     console.log("Data saved successfully");
   } catch (err) {
@@ -686,10 +700,10 @@ function renderAccGrid() {
   document.getElementById("accgrid").innerHTML = D.accounts
     .map(function (a) {
       var opps = D.opportunities.filter(function (o) {
-          return o.accountId === a.id;
+          return o.accountId === a.account_id;
         }),
         acts = D.activities.filter(function (x) {
-          return x.accountId === a.id;
+          return x.accountId === a.account_id;
         }),
         ov = acts.filter(function (x) {
           return x.followup && x.followup <= t && !x.done;
@@ -721,7 +735,7 @@ function renderAccGrid() {
         }, 0);
       return (
         '<div class="acc-card" onclick="show360(\'' +
-        a.id +
+        a.account_id +
         '\')"><div class="an">' +
         a.name +
         '</div><div class="ams">' +
@@ -762,7 +776,7 @@ function renderAccGrid() {
 
 function render360(id) {
   var acc = D.accounts.find(function (a) {
-    return a.id === id;
+    return a.account_id === id;
   });
   if (!acc) return;
   var t = tod(),
@@ -1308,9 +1322,9 @@ function aOpts(sel) {
     .map(function (a) {
       return (
         '<option value="' +
-        a.id +
+        a.account_id +
         '"' +
-        (a.id === sel ? " selected" : "") +
+        (a.account_id === sel ? " selected" : "") +
         ">" +
         a.name +
         "</option>"
@@ -1628,66 +1642,6 @@ function saveSub(id) {
   save();
   closeM();
   if (isCRMPage) renderAll();
-}
-
-// ============================================================
-// AI BAR — move API key to a backend function before going live
-// ============================================================
-async function doAI() {
-  var inp = document.getElementById("aiin"),
-    resp = document.getElementById("aimsg"),
-    q = inp.value.trim();
-  if (!q) return;
-  resp.style.display = "block";
-  resp.textContent = "Thinking...";
-  try {
-    var res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 500,
-        system:
-          "You are a CRM assistant for Homecare One Singapore. Accounts: " +
-          JSON.stringify(
-            D.accounts.map(function (a) {
-              return { id: a.id, name: a.name };
-            }),
-          ) +
-          ". Today: " +
-          tod() +
-          '. For create actions reply with confirmation + JSON {"action":"create","type":"activity","data":{type,date,accountId,notes,followup,significant:false}}. For questions reply plain English only.',
-        messages: [{ role: "user", content: q }],
-      }),
-    });
-    var d = await res.json(),
-      text = (d.content || [])
-        .filter(function (b) {
-          return b.type === "text";
-        })
-        .map(function (b) {
-          return b.text;
-        })
-        .join(""),
-      jm = text.match(/\{[\s\S]*?"action"[\s\S]*?\}/);
-    resp.textContent =
-      text.replace(/\{[\s\S]*?"action"[\s\S]*?\}/, "").trim() || "Done.";
-    if (jm) {
-      try {
-        var act = JSON.parse(jm[0]);
-        if (act.action === "create" && act.data) {
-          var rec = Object.assign({ id: uid() }, act.data);
-          if (act.type === "activity") D.activities.push(rec);
-          save();
-          if (isCRMPage) renderAll();
-          resp.textContent += " ✓ Saved.";
-        }
-      } catch (e) {}
-    }
-  } catch (e) {
-    resp.textContent = "AI error. Please try again.";
-  }
-  inp.value = "";
 }
 
 if (isCRMPage) renderAll();
