@@ -367,17 +367,38 @@ if (isCRMPage) {
   loadCrmData();
 }
 
+//need to add for contacts, opportunities, activities, submissions
 async function saveToSupabase() {
   try {
     const { accounts, contacts, opportunities, activities, submissions } = D;
 
-    const results = await Promise.all([
-      supabase.from("accounts").upsert(accounts),
-      supabase.from("contacts").upsert(contacts),
-      supabase.from("opportunities").upsert(opportunities),
-      supabase.from("activities").upsert(activities),
-      supabase.from("submissions").upsert(submissions),
-    ]);
+    // Separate new vs existing records
+    const newAccounts = accounts.filter(a => !a.account_id);
+    const existingAccounts = accounts.filter(a => a.account_id);
+
+    // Insert new records
+    if (newAccounts.length > 0) {
+      const { error: insertError } = await supabase
+        .from('accounts')
+        .insert(newAccounts);
+      if (insertError) throw insertError;
+    }
+
+        // Update existing records
+    if (existingAccounts.length > 0) {
+      const { error: updateError } = await supabase
+        .from('accounts')
+        .upsert(existingAccounts);
+      if (updateError) throw updateError;
+    }
+
+    // const results = await Promise.all([
+    //   supabase.from("accounts").upsert(accounts),
+    //   supabase.from("contacts").upsert(contacts),
+    //   supabase.from("opportunities").upsert(opportunities),
+    //   supabase.from("activities").upsert(activities),
+    //   supabase.from("submissions").upsert(submissions),
+    // ]);
 
     const error = results.find((r) => r.error)?.error;
 
@@ -396,6 +417,8 @@ async function saveToSupabase() {
 async function save() {
   try {
     await saveToSupabase();
+    await loadCrmData(); // Refresh local data after saving
+    renderAll(); // Re-render the UI with updated data
   } catch (e) {}
 };
 
