@@ -1490,7 +1490,7 @@ function saveAcc(id) {
   var n = document.getElementById("fn").value.trim();
   if (!n) return alert("Name required");
   var r = {
-    id: id || uid(),
+    account_id: id || uid(),
     name: n,
     type: document.getElementById("ft").value,
     status: document.getElementById("fst").value,
@@ -1515,7 +1515,7 @@ function saveCt(id) {
     id: id || uid(),
     name: n,
     role: document.getElementById("fr").value,
-    accountId: document.getElementById("fa").value,
+    account_id: document.getElementById("fa").value,
     phone: document.getElementById("fp").value,
     email: document.getElementById("fe").value,
   };
@@ -1536,7 +1536,7 @@ function saveOp(id) {
   var r = {
     id: id || uid(),
     title: t,
-    accountId: document.getElementById("fa").value,
+    account_id: document.getElementById("fa").value,
     stage: document.getElementById("fs").value,
     value: document.getElementById("fv").value,
     hca: parseInt(document.getElementById("req_hca").value) || 0,
@@ -1567,7 +1567,7 @@ function saveAct(id) {
     id: id || uid(),
     type: document.getElementById("ft").value,
     date: document.getElementById("fd").value,
-    accountId: document.getElementById("fa").value,
+    account_id: document.getElementById("fa").value,
     notes: document.getElementById("fno").value,
     followup: document.getElementById("ffu").value,
     significant: document.getElementById("fsig").checked,
@@ -1589,9 +1589,9 @@ function saveSub(id) {
   if (!n) return alert("Name required");
   var r = {
     id: id || uid(),
-    candidateName: n,
+    candidate_name: n,
     role: document.getElementById("fr").value,
-    accountId: document.getElementById("fa").value,
+    account_id: document.getElementById("fa").value,
     status: document.getElementById("fss").value,
     rejection: document.getElementById("frej").value,
     notes: document.getElementById("fno").value,
