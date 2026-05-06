@@ -695,6 +695,7 @@ function renderDash() {
     : '<div class="empty">No overdue follow-ups</div>';
 }
 
+//shows account cards in accounts page
 function renderAccGrid() {
   var t = tod();
   document.getElementById("accgrid").innerHTML = D.accounts
@@ -848,7 +849,7 @@ function render360(id) {
             '</div><div class="anote">' +
             (a.notes || "—") +
             "</div></div><button class=\"btn\" onclick=\"openM('activity','" +
-            a.id +
+            a.account_id +
             "')\">Edit</button></div></div>"
           );
         })
@@ -1096,9 +1097,9 @@ function renderActs() {
             ">" +
             (a.followup || "—") +
             "</td><td><button class=\"btn\" onclick=\"openM('activity','" +
-            a.id +
+            a.account_id +
             "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('activities','" +
-            a.id +
+            a.account_id +
             "')\">Del</button></td></tr>"
           );
         })
@@ -1348,7 +1349,7 @@ function openM(type, recId, presetAcc) {
         return x.id === recId;
       });
   }
-  var sa = rec ? rec.accountId : presetAcc || "";
+  var sa = rec ? rec.account_id : presetAcc || "";
   var b = document.getElementById("mbox");
   if (type === "account") {
     b.innerHTML =
