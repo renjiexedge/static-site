@@ -1,7 +1,6 @@
 // This file contains the JavaScript code for the static site.
 // You can add functions to manipulate the DOM, handle events, or perform other client-side operations.
 
-import { get } from "http";
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabaseUrl = "https://loqujxhskaiqlwurcrdl.supabase.co";
@@ -486,6 +485,16 @@ function go(p) {
   if (p === "accounts") backToList();
   if (isCRMPage) renderAll();
 }
+
+window.go = go;
+window.godashboard = () => go('dashboard');
+window.goaccounts = () => go('accounts');
+window.gocontacts = () => go('contacts');
+window.goopportunities = () => go('opportunities');
+window.gopipeline = () => go('pipeline');
+window.goactivities = () => go('activities');
+window.gosubmissions = () => go('submissions');
+window.goreports = () => go('reports');
 
 function backToList() {
   cur360 = null;
@@ -1666,7 +1675,7 @@ if (typeof window !== "undefined") {
   });
 }
 
-window.go = go;
+
 
 //Schema for database activities have critical error. Needs more Unique Primary Keys. Possibily same with the other schemas.
 //Need to launch to live to check if the database functions as expected. Test(create, read, update,delete) in live environment.
