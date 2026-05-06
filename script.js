@@ -367,11 +367,11 @@ if (isCRMPage) {
   loadCrmData();
 }
 
-//need to add for contacts, opportunities, activities, submissions
 async function saveToSupabase() {
   try {
     const { accounts, contacts, opportunities, activities, submissions } = D;
 
+<<<<<<< HEAD
     // Separate new vs existing records
     const newAccounts = accounts.filter(a => !a.account_id);
     const existingAccounts = accounts.filter(a => a.account_id);
@@ -415,6 +415,15 @@ async function saveToSupabase() {
     //   supabase.from("submissions").upsert(submissions),
     // ]);
     //const error = results.find((r) => r.error)?.error;
+=======
+    const results = await Promise.all([
+      supabase.from("accounts").upsert(accounts),
+      supabase.from("contacts").upsert(contacts),
+      supabase.from("opportunities").upsert(opportunities),
+      supabase.from("activities").upsert(activities),
+      supabase.from("submissions").upsert(submissions),
+    ]);
+>>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
 
     // if (error) {
     //   console.error("Error saving CRM data:", error);
@@ -431,8 +440,6 @@ async function saveToSupabase() {
 async function save() {
   try {
     await saveToSupabase();
-    await loadCrmData(); // Refresh local data after saving
-    renderAll(); // Re-render the UI with updated data
   } catch (e) {}
 };
 
