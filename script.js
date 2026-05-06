@@ -1490,7 +1490,7 @@ function saveAcc(id) {
   var n = document.getElementById("fn").value.trim();
   if (!n) return alert("Name required");
   var r = {
-    account_id: id || uid(),
+    //account_id: id || uid(),
     name: n,
     type: document.getElementById("ft").value,
     status: document.getElementById("fst").value,
@@ -1512,7 +1512,7 @@ function saveCt(id) {
   var n = document.getElementById("fn").value.trim();
   if (!n) return alert("Name required");
   var r = {
-    id: id || uid(),
+    //id: id || uid(),
     name: n,
     role: document.getElementById("fr").value,
     account_id: document.getElementById("fa").value,
@@ -1534,7 +1534,7 @@ function saveOp(id) {
   var t = document.getElementById("ft").value.trim();
   if (!t) return alert("Title required");
   var r = {
-    id: id || uid(),
+    //id: id || uid(),
     title: t,
     account_id: document.getElementById("fa").value,
     stage: document.getElementById("fs").value,
@@ -1564,7 +1564,7 @@ function saveOp(id) {
 
 function saveAct(id) {
   var r = {
-    id: id || uid(),
+    //id: id || uid(),
     type: document.getElementById("ft").value,
     date: document.getElementById("fd").value,
     account_id: document.getElementById("fa").value,
@@ -1588,7 +1588,7 @@ function saveSub(id) {
   var n = document.getElementById("fn").value.trim();
   if (!n) return alert("Name required");
   var r = {
-    id: id || uid(),
+    //id: id || uid(),
     candidate_name: n,
     role: document.getElementById("fr").value,
     account_id: document.getElementById("fa").value,
@@ -1688,5 +1688,6 @@ if (typeof window !== "undefined") {
 
 
 
-//Schema for database activities have critical error. Needs more Unique Primary Keys. Possibily same with the other schemas.
+//Need to test method i in letting supabase handle ID generation vs generating ID in frontend.
 //Need to launch to live to check if the database functions as expected. Test(create, read, update,delete) in live environment.
+//^Read checked and working. Left(create,update,delete) to be tested in live environment due to ID generation method.
