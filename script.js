@@ -367,29 +367,20 @@ if (isCRMPage) {
   loadCrmData();
 }
 
+//need to add for contacts, opportunities, activities, submissions
 async function saveToSupabase() {
   try {
     const { accounts, contacts, opportunities, activities, submissions } = D;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     // Separate new vs existing records
     const newAccounts = accounts.filter(a => !a.account_id);
     const existingAccounts = accounts.filter(a => a.account_id);
-    const newContacts = contacts.filter(c => !c.id);
-    const existingContacts = contacts.filter(c => c.id);
 
     // Insert new records
     if (newAccounts.length > 0) {
       const { error: insertError } = await supabase
         .from('accounts')
         .insert(newAccounts);
-      if (insertError) throw insertError;
-    }
-    if (newContacts.length > 0) {
-      const { error: insertError } = await supabase
-        .from('contacts')
-        .insert(newContacts);
       if (insertError) throw insertError;
     }
 
@@ -401,13 +392,6 @@ async function saveToSupabase() {
       if (updateError) throw updateError;
     }
 
-    if (existingContacts.length > 0) {
-      const { error: updateError } = await supabase
-        .from('contacts')
-        .upsert(existingContacts);
-      if (updateError) throw updateError;
-    }
-
     // const results = await Promise.all([
     //   supabase.from("accounts").upsert(accounts),
     //   supabase.from("contacts").upsert(contacts),
@@ -415,26 +399,13 @@ async function saveToSupabase() {
     //   supabase.from("activities").upsert(activities),
     //   supabase.from("submissions").upsert(submissions),
     // ]);
-    //const error = results.find((r) => r.error)?.error;
-=======
-=======
->>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
-    const results = await Promise.all([
-      supabase.from("accounts").upsert(accounts),
-      supabase.from("contacts").upsert(contacts),
-      supabase.from("opportunities").upsert(opportunities),
-      supabase.from("activities").upsert(activities),
-      supabase.from("submissions").upsert(submissions),
-    ]);
-<<<<<<< HEAD
->>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
-=======
->>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
 
-    // if (error) {
-    //   console.error("Error saving CRM data:", error);
-    //   return;
-    // }
+    const error = results.find((r) => r.error)?.error;
+
+    if (error) {
+      console.error("Error saving CRM data:", error);
+      return;
+    }
 
     console.log("Data saved successfully");
   } catch (err) {
@@ -446,6 +417,8 @@ async function saveToSupabase() {
 async function save() {
   try {
     await saveToSupabase();
+    await loadCrmData(); // Refresh local data after saving
+    renderAll(); // Re-render the UI with updated data
   } catch (e) {}
 };
 
@@ -708,16 +681,15 @@ function renderDash() {
     : '<div class="empty">No overdue follow-ups</div>';
 }
 
-//shows account cards in accounts page
 function renderAccGrid() {
   var t = tod();
   document.getElementById("accgrid").innerHTML = D.accounts
     .map(function (a) {
       var opps = D.opportunities.filter(function (o) {
-          return o.accountId === a.account_id;
+          return o.accountId === a.id;
         }),
         acts = D.activities.filter(function (x) {
-          return x.accountId === a.account_id;
+          return x.accountId === a.id;
         }),
         ov = acts.filter(function (x) {
           return x.followup && x.followup <= t && !x.done;
@@ -749,7 +721,7 @@ function renderAccGrid() {
         }, 0);
       return (
         '<div class="acc-card" onclick="show360(\'' +
-        a.account_id +
+        a.id +
         '\')"><div class="an">' +
         a.name +
         '</div><div class="ams">' +
@@ -790,7 +762,7 @@ function renderAccGrid() {
 
 function render360(id) {
   var acc = D.accounts.find(function (a) {
-    return a.account_id === id;
+    return a.id === id;
   });
   if (!acc) return;
   var t = tod(),
@@ -862,7 +834,7 @@ function render360(id) {
             '</div><div class="anote">' +
             (a.notes || "—") +
             "</div></div><button class=\"btn\" onclick=\"openM('activity','" +
-            a.account_id +
+            a.id +
             "')\">Edit</button></div></div>"
           );
         })
@@ -1110,9 +1082,9 @@ function renderActs() {
             ">" +
             (a.followup || "—") +
             "</td><td><button class=\"btn\" onclick=\"openM('activity','" +
-            a.account_id +
+            a.id +
             "')\">Edit</button> <button class=\"btn btnd\" onclick=\"del('activities','" +
-            a.account_id +
+            a.id +
             "')\">Del</button></td></tr>"
           );
         })
@@ -1336,9 +1308,9 @@ function aOpts(sel) {
     .map(function (a) {
       return (
         '<option value="' +
-        a.account_id +
+        a.id +
         '"' +
-        (a.account_id === sel ? " selected" : "") +
+        (a.id === sel ? " selected" : "") +
         ">" +
         a.name +
         "</option>"
@@ -1362,7 +1334,7 @@ function openM(type, recId, presetAcc) {
         return x.id === recId;
       });
   }
-  var sa = rec ? rec.account_id : presetAcc || "";
+  var sa = rec ? rec.accountId : presetAcc || "";
   var b = document.getElementById("mbox");
   if (type === "account") {
     b.innerHTML =
@@ -1658,16 +1630,67 @@ function saveSub(id) {
   if (isCRMPage) renderAll();
 }
 
-if (isCRMPage) renderAll();
-
-//debugging
-console.log('Functions available:', { openM, show360, saveAcc });
-if (typeof window !== "undefined") {
-  Object.assign(window, { openM, show360, saveAcc });
-  console.log('Globals exposed:', { openM: window.openM, show360: window.show360 });
+// ============================================================
+// AI BAR — move API key to a backend function before going live
+// ============================================================
+async function doAI() {
+  var inp = document.getElementById("aiin"),
+    resp = document.getElementById("aimsg"),
+    q = inp.value.trim();
+  if (!q) return;
+  resp.style.display = "block";
+  resp.textContent = "Thinking...";
+  try {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 500,
+        system:
+          "You are a CRM assistant for Homecare One Singapore. Accounts: " +
+          JSON.stringify(
+            D.accounts.map(function (a) {
+              return { id: a.id, name: a.name };
+            }),
+          ) +
+          ". Today: " +
+          tod() +
+          '. For create actions reply with confirmation + JSON {"action":"create","type":"activity","data":{type,date,accountId,notes,followup,significant:false}}. For questions reply plain English only.',
+        messages: [{ role: "user", content: q }],
+      }),
+    });
+    var d = await res.json(),
+      text = (d.content || [])
+        .filter(function (b) {
+          return b.type === "text";
+        })
+        .map(function (b) {
+          return b.text;
+        })
+        .join(""),
+      jm = text.match(/\{[\s\S]*?"action"[\s\S]*?\}/);
+    resp.textContent =
+      text.replace(/\{[\s\S]*?"action"[\s\S]*?\}/, "").trim() || "Done.";
+    if (jm) {
+      try {
+        var act = JSON.parse(jm[0]);
+        if (act.action === "create" && act.data) {
+          var rec = Object.assign({ id: uid() }, act.data);
+          if (act.type === "activity") D.activities.push(rec);
+          save();
+          if (isCRMPage) renderAll();
+          resp.textContent += " ✓ Saved.";
+        }
+      } catch (e) {}
+    }
+  } catch (e) {
+    resp.textContent = "AI error. Please try again.";
+  }
+  inp.value = "";
 }
 
-
+if (isCRMPage) renderAll();
 
 if (typeof window !== "undefined") {
   Object.assign(window, {
@@ -1687,5 +1710,6 @@ if (typeof window !== "undefined") {
 }
 
 
+
+//Need to test method i in letting supabase handle ID generation vs generating ID in frontend.
 //Need to launch to live to check if the database functions as expected. Test(create, read, update,delete) in live environment.
-//^Read checked and working. Left(create,update,delete) to be tested in live environment due to ID generation method.
