@@ -372,6 +372,7 @@ async function saveToSupabase() {
     const { accounts, contacts, opportunities, activities, submissions } = D;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Separate new vs existing records
     const newAccounts = accounts.filter(a => !a.account_id);
     const existingAccounts = accounts.filter(a => a.account_id);
@@ -416,6 +417,8 @@ async function saveToSupabase() {
     // ]);
     //const error = results.find((r) => r.error)?.error;
 =======
+=======
+>>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
     const results = await Promise.all([
       supabase.from("accounts").upsert(accounts),
       supabase.from("contacts").upsert(contacts),
@@ -423,6 +426,9 @@ async function saveToSupabase() {
       supabase.from("activities").upsert(activities),
       supabase.from("submissions").upsert(submissions),
     ]);
+<<<<<<< HEAD
+>>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
+=======
 >>>>>>> parent of c334745 (Test 7 Changed how saveToSupabase() works from upsert to insert to prevent null primary key constraint.)
 
     // if (error) {
