@@ -1647,6 +1647,15 @@ function saveSub(id) {
 
 if (isCRMPage) renderAll();
 
+//debugging
+console.log('Functions available:', { openM, show360, saveAcc });
+if (typeof window !== "undefined") {
+  Object.assign(window, { openM, show360, saveAcc });
+  console.log('Globals exposed:', { openM: window.openM, show360: window.show360 });
+}
+
+
+
 if (typeof window !== "undefined") {
   Object.assign(window, {
     go,
@@ -1665,7 +1674,5 @@ if (typeof window !== "undefined") {
 }
 
 
-
-//Need to test method i in letting supabase handle ID generation vs generating ID in frontend.
 //Need to launch to live to check if the database functions as expected. Test(create, read, update,delete) in live environment.
 //^Read checked and working. Left(create,update,delete) to be tested in live environment due to ID generation method.
