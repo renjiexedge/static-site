@@ -355,7 +355,17 @@ async function getCrmData() {
   return D;
 }
 
-var D = getCrmData();
+let D = { accounts: [], contacts: [], opportunities: [], activities: [], submissions: [] };
+
+async function loadCrmData() {
+  D = await getCrmData();
+  if (isCRMPage) renderAll();
+}
+
+// Call it on load
+if (isCRMPage) {
+  loadCrmData();
+}
 
 async function saveToSupabase() {
   try {
@@ -382,6 +392,7 @@ async function saveToSupabase() {
   }
 }
 
+//Save data before leaving the page to supabase
 async function save() {
   try {
     await saveToSupabase();
